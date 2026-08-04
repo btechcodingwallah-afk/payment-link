@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LPU Touch - Renewal & Payment Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+      --btn-hover: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #c026d3 100%);
+      --accent-green: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --input-bg: rgba(15, 23, 42, 0.6);
+      --input-border: rgba(99, 102, 241, 0.3);
+      --shadow-glow: 0 10px 30px -10px rgba(139, 92, 246, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .background-blobs {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 12s infinite alternate ease-in-out;
+    }
+
+    .blob-1 {
+      top: -10%;
+      left: -10%;
+      width: 400px;
+      height: 400px;
+      background: #6366f1;
+    }
+
+    .blob-2 {
+      bottom: -10%;
+      right: -10%;
+      width: 450px;
+      height: 450px;
+      background: #d946ef;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 50px) scale(1.1); }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 460px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .header-logo {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .header-logo h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .header-logo p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .step-view {
+      display: none;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .step-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 14px;
+      color: var(--text-main);
+      font-size: 15px;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .input-wrapper input:focus {
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 18px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 14px;
+      background: var(--primary-gradient);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow-glow);
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background: var(--btn-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 35px -10px rgba(139, 92, 246, 0.6);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+      border: 1px solid var(--card-border);
+      margin-top: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: none;
+    }
+
+    .btn-success {
+      background: var(--accent-green);
+      box-shadow: 0 10px 30px -10px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+      box-shadow: 0 14px 35px -10px rgba(16, 185, 129, 0.6);
+    }
+
+    /* Link Generated View */
+    .link-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px dashed rgba(139, 92, 246, 0.4);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 16px;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 13px;
+      color: #a7f3d0;
+      position: relative;
+    }
+
+    /* Details Card */
+    .details-list {
+      background: rgba(15, 23, 42, 0.5);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .details-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .details-row:last-child {
+      border-bottom: none;
+    }
+
+    .details-row .label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .details-row .value {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .amount-highlight {
+      color: #34d399 !important;
+      font-size: 18px !important;
+      font-weight: 700 !important;
+    }
+
+    /* QR Container */
+    .qr-card {
+      background: white;
+      padding: 16px;
+      border-radius: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 16px 0 20px 0;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .qr-card img {
+      width: 190px;
+      height: 190px;
+      display: block;
+    }
+
+    .qr-hint {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    /* Success Screen */
+    .success-icon-wrap {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid #10b981;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px auto 20px auto;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .success-icon-wrap svg {
+      width: 42px;
+      height: 42px;
+      fill: none;
+      stroke: #10b981;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="background-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="container">
+    <div class="header-logo">
+      <h1>LPU TOUCH PAY</h1>
+      <p>Instant Subscription & Account Renewal Portal</p>
+    </div>
+
+    <div class="glass-card">
+
+      <!-- STEP 1: Registration ID & Amount Entry -->
+      <div id="step-1" class="step-view active">
+        <div class="form-group">
+          <label for="input-reg-id">Registration ID</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="input-reg-id" placeholder="e.g. 12312621" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="form-group" id="amount-group" style="display: none;">
+          <label for="input-amount">Renewal Amount (₹)</label>
+          <div class="input-wrapper">
+            <span class="input-icon">₹</span>
+            <input type="number" id="input-amount" placeholder="e.g. 500" value="500">
+          </div>
+        </div>
+
+        <button class="btn" id="btn-next">
+          <span>Proceed</span> ➔
+        </button>
+
+        <div id="generated-link-area" style="display: none; margin-top: 20px;">
+          <label style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Shareable Payment Link</label>
+          <div class="link-box" id="link-display">Generating...</div>
+          
+          <div style="display: flex; gap: 10px; margin-top: 12px;">
+            <button class="btn btn-secondary" id="btn-copy">📋 Copy Link</button>
+            <button class="btn" id="btn-open-link">🔗 Open Page</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: Payment Page with Details, QR & Pay Button -->
+      <div id="step-2" class="step-view">
+        <div class="details-list">
+          <div class="details-row">
+            <span class="label">Registration ID</span>
+            <span class="value" id="pay-reg-id">--</span>
+          </div>
+          <div class="details-row">
+            <span class="label">Student Name</span>
+            <span class="value" id="pay-student-name">Student</span>
+          </div>
+          <div class="details-row">
+            <span class="label">Last Renewal Date</span>
+            <span class="value" id="pay-renewal-date">Today</span>
+          </div>
+          <div class="details-row">
+            <span class="label">Amount Due</span>
+            <span class="value amount-highlight" id="pay-amount">₹0.00</span>
+          </div>
+        </div>
+
+        <!-- UPI QR Code -->
+        <div class="qr-card">
+          <img id="qr-code-img" src="" alt="Scan UPI QR Code">
+          <div class="qr-hint">Scan with GPay, PhonePe, Paytm, BHIM</div>
+        </div>
+
+        <!-- Action Buttons -->
+        <button class="btn" id="btn-pay-upi">
+          <span>📱 Pay via UPI App</span>
+        </button>
+
+        <button class="btn btn-success" id="btn-mark-paid" style="margin-top: 12px;">
+          <span>✅ Paid / Mark as Complete</span>
+        </button>
+
+        <button class="btn btn-secondary" id="btn-back-step1" style="margin-top: 10px;">
+          <span>← Back to Generator</span>
+        </button>
+      </div>
+
+      <!-- STEP 3: Payment Success Receipt -->
+      <div id="step-3" class="step-view text-center">
+        <div class="success-icon-wrap">
+          <svg viewBox="0 0 24 24">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+
+        <span class="badge">TRANSACTION SUCCESSFUL</span>
+        <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Payment Completed!</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Your subscription renewal request has been processed successfully.</p>
+
+        <div class="details-list text-left">
+          <div class="details-row">
+            <span class="label">Registration ID</span>
+            <span class="value" id="success-reg-id">--</span>
+          </div>
+          <div class="details-row">
+            <span class="label">Amount Paid</span>
+            <span class="value amount-highlight" id="success-amount">₹0.00</span>
+          </div>
+          <div class="details-row">
+            <span class="label">Payment Date</span>
+            <span class="value" id="success-date">--</span>
+          </div>
+          <div class="details-row">
+            <span class="label">Status</span>
+            <span class="value" style="color: #34d399;">Active ✅</span>
+          </div>
+        </div>
+
+        <button class="btn" id="btn-reset">
+          <span>Create New Renewal Link</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // State Variables
+    let currentRegId = "";
+    let currentAmount = 500;
+    let upiAddress = "sagestore@upi"; // Default UPI ID
+
+    // DOM Elements
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+
+    const inputRegId = document.getElementById('input-reg-id');
+    const inputAmount = document.getElementById('input-amount');
+    const amountGroup = document.getElementById('amount-group');
+    const btnNext = document.getElementById('btn-next');
+
+    const generatedLinkArea = document.getElementById('generated-link-area');
+    const linkDisplay = document.getElementById('link-display');
+    const btnCopy = document.getElementById('btn-copy');
+    const btnOpenLink = document.getElementById('btn-open-link');
+
+    const payRegId = document.getElementById('pay-reg-id');
+    const payStudentName = document.getElementById('pay-student-name');
+    const payRenewalDate = document.getElementById('pay-renewal-date');
+    const payAmount = document.getElementById('pay-amount');
+    const qrCodeImg = document.getElementById('qr-code-img');
+    const btnPayUpi = document.getElementById('btn-pay-upi');
+    const btnMarkPaid = document.getElementById('btn-mark-paid');
+    const btnBackStep1 = document.getElementById('btn-back-step1');
+
+    const successRegId = document.getElementById('success-reg-id');
+    const successAmount = document.getElementById('success-amount');
+    const successDate = document.getElementById('success-date');
+    const btnReset = document.getElementById('btn-reset');
+
+    // Automatically reveal Amount input as soon as user types Registration ID
+    inputRegId.addEventListener('input', () => {
+      const val = inputRegId.value.trim();
+      if (val.length >= 3) {
+        amountGroup.style.display = 'block';
+      }
+    });
+
+    // Handle Proceed / Generate Link Button
+    btnNext.addEventListener('click', () => {
+      const regId = inputRegId.value.trim();
+      const amount = inputAmount.value.trim();
+
+      if (!regId) {
+        alert('Please enter a Registration ID');
+        inputRegId.focus();
+        return;
+      }
+      if (!amount || parseFloat(amount) <= 0) {
+        alert('Please enter a valid amount');
+        inputAmount.focus();
+        return;
+      }
+
+      currentRegId = regId;
+      currentAmount = parseFloat(amount);
+
+      // Generate Link
+      const baseUrl = window.location.origin + window.location.pathname;
+      const generatedUrl = `${baseUrl}?regId=${encodeURIComponent(currentRegId)}&amount=${encodeURIComponent(currentAmount)}`;
+      
+      linkDisplay.textContent = generatedUrl;
+      generatedLinkArea.style.display = 'block';
+    });
+
+    // Copy Link Button
+    btnCopy.addEventListener('click', () => {
+      navigator.clipboard.writeText(linkDisplay.textContent).then(() => {
+        btnCopy.textContent = '✅ Copied!';
+        setTimeout(() => btnCopy.textContent = '📋 Copy Link', 2000);
+      });
+    });
+
+    // Open Payment Page Directly
+    btnOpenLink.addEventListener('click', () => {
+      showPaymentPage(currentRegId, currentAmount);
+    });
+
+    // Back to Generator
+    btnBackStep1.addEventListener('click', () => {
+      switchStep(step1);
+    });
+
+    // Pay via UPI App
+    btnPayUpi.addEventListener('click', () => {
+      const upiUrl = generateUpiString(currentRegId, currentAmount);
+      window.location.href = upiUrl;
+    });
+
+    // Mark as Paid Button
+    btnMarkPaid.addEventListener('click', () => {
+      const todayStr = new Date().toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      successRegId.textContent = currentRegId;
+      successAmount.textContent = `₹${currentAmount.toFixed(2)}`;
+      successDate.textContent = todayStr;
+
+      switchStep(step3);
+    });
+
+    // Reset Form
+    btnReset.addEventListener('click', () => {
+      inputRegId.value = '';
+      inputAmount.value = '500';
+      amountGroup.style.display = 'none';
+      generatedLinkArea.style.display = 'none';
+      history.pushState("", document.title, window.location.pathname);
+      switchStep(step1);
+    });
+
+    // Helper: Switch View Steps
+    function switchStep(targetStep) {
+      [step1, step2, step3].forEach(step => step.classList.remove('active'));
+      targetStep.classList.add('active');
+    }
+
+    // Helper: Generate UPI Deep Link
+    function generateUpiString(regId, amount) {
+      const note = encodeURIComponent(`LPU Renewal ID ${regId}`);
+      const name = encodeURIComponent("LPU Touch Service");
+      return `upi://pay?pa=${upiAddress}&pn=${name}&am=${amount}&cu=INR&tn=${note}`;
+    }
+
+    // Helper: Display Payment Page
+    function showPaymentPage(regId, amount) {
+      currentRegId = regId;
+      currentAmount = parseFloat(amount);
+
+      payRegId.textContent = regId;
+      payAmount.textContent = `₹${currentAmount.toFixed(2)}`;
+
+      const todayDate = new Date().toLocaleDateString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric'
+      });
+      payRenewalDate.textContent = todayDate;
+
+      // Try fetching student data from API
+      fetch(`https://touch-lpuapi-sage.vercel.app/admin/getStudentData/${regId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && (data.StudentName || data.name)) {
+            payStudentName.textContent = data.StudentName || data.name;
+          } else {
+            payStudentName.textContent = `Student (${regId})`;
+          }
+        })
+        .catch(() => {
+          payStudentName.textContent = `Student (${regId})`;
+        });
+
+      // Generate QR Code Image URL
+      const upiUrl = generateUpiString(regId, currentAmount);
+      const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(upiUrl)}`;
+      qrCodeImg.src = qrApiUrl;
+
+      switchStep(step2);
+    }
+
+    // Parse URL Parameters on Page Load
+    function initFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const regId = urlParams.get('regId');
+      const amount = urlParams.get('amount');
+
+      if (regId && amount) {
+        showPaymentPage(regId, amount);
+      } else {
+        switchStep(step1);
+      }
+    }
+
+    // Run on load
+    window.addEventListener('DOMContentLoaded', initFromUrl);
+  </script>
+</body>
+</html>
